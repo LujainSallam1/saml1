@@ -6,34 +6,38 @@
 </head>
 <body>
     <h1>Keycloak Authentication</h1>
-    
+     
     <button id="login">Login with Keycloak</button>
 
     <script>
-        const keycloak = Keycloak({
-            url: 'http://localhost:8080',
-            realm: 'saml',
-            clientId: 'frontend',
-            redirectUri: 'https://lujainsallam1.github.io/saml',
-
+        const keycloak = Keycloak({ 
+            url: 'http://localhost:8080', 
+            realm: 'saml', 
+            clientId: 'frontend', 
+            redirectUri: 'https://lujainsallam1.github.io/saml', 
         });
 
-        document.getElementById('login').addEventListener('click', () => {
-            keycloak.login();
-        });
+        let isButtonClicked = false; // إضافة متغير للتحقق من النقر على الزر
 
-        keycloak.init({ onLoad: 'login-required' }).success((authenticated) => {
-            if (authenticated) {
-                alert("User is authenticated!");
-            } else {
-                alert("User authentication failed!");
+        document.getElementById('login').addEventListener('click', () => { 
+            if (!isButtonClicked) { // التحقق من أنه لم يتم النقر على الزر بالفعل
+                isButtonClicked = true; // تعيين المتغير للإشارة إلى النقر على الزر
+                keycloak.login();
             }
-        }).error(() => {
-            alert("Could not authenticate the user!");
         });
 
-        if (keycloak.hasRealmRole('admin')) {
-            alert("User is an admin!");
+        keycloak.init({ onLoad: 'login-required' }).success((authenticated) => { 
+            if (authenticated) { 
+                alert("User is authenticated!"); 
+            } else { 
+                alert("User authentication failed!"); 
+            } 
+        }).error(() => { 
+            alert("Could not authenticate the user!"); 
+        });
+
+        if (keycloak.hasRealmRole('admin')) { 
+            alert("User is an admin!"); 
         }
     </script>
 </body>
