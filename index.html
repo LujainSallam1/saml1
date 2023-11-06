@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Keycloak Login</title>
+    <title>Keycloak Authentication</title>
     <script src="https://cdn.jsdelivr.net/npm/keycloak-js@16.1.0/dist/keycloak.js"></script>
 </head>
 <body>
@@ -17,28 +17,20 @@
             redirectUri: 'https://lujainsallam1.github.io/saml', 
         });
 
-        let isButtonClicked = false; // إضافة متغير للتحقق من النقر على الزر
-
-        document.getElementById('login').addEventListener('click', () => { 
-            if (!isButtonClicked) { // التحقق من أنه لم يتم النقر على الزر بالفعل
-                isButtonClicked = true; // تعيين المتغير للإشارة إلى النقر على الزر
-                keycloak.login();
-            }
+        document.getElementById('login').addEventListener('click', () => {
+            keycloak.login(); // توجيه المستخدم إلى صفحة تسجيل الدخول
         });
 
         keycloak.init({ onLoad: 'login-required' }).success((authenticated) => { 
             if (authenticated) { 
-                alert("User is authenticated!"); 
+                const accessToken = keycloak.token; // الحصول على access token
+                alert("Access Token: " + accessToken);
             } else { 
                 alert("User authentication failed!"); 
             } 
         }).error(() => { 
             alert("Could not authenticate the user!"); 
         });
-
-        if (keycloak.hasRealmRole('admin')) { 
-            alert("User is an admin!"); 
-        }
     </script>
 </body>
 </html>
