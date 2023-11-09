@@ -14,15 +14,12 @@
         <button id="loginButton" class="btn btn-primary">Log In</button>
     </div>
 
-    <!-- Include Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/keycloak-js@16.1.0/dist/keycloak.js"></script>
 
-    <script>
+ <script>
         // Initialize Keycloak
         const keycloak = Keycloak({
-            url: 'http://localhost:8080',
+            url: 'http://localhost:8080/auth',
             realm: 'master',
             clientId: 'frontend',
         });
@@ -35,7 +32,17 @@
         // Initialize Keycloak and handle user authentication
         keycloak.init({ onLoad: 'login-required' }).then((authenticated) => {
             if (authenticated) {
-                // User is successfully authenticated, you can add additional behavior here
+                // User is successfully authenticated
+                const tokenParsed = keycloak.tokenParsed;
+                const roles = tokenParsed.realm_access.roles;
+
+                if (roles.includes("admin")) {
+                    // User has 'admin' role, you can redirect to the admin page
+                    window.location.href = 'https://lujainsallam1.github.io/saml';
+                } else {
+                    // User does not have admin role, log them out
+                    keycloak.logout();
+                }
             } else {
                 alert("Authentication failed.");
             }
@@ -43,3 +50,5 @@
     </script>
 </body>
 </html>
+
+
