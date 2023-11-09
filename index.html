@@ -1,36 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Keycloak Authentication</title>
-    <script src="https://cdn.jsdelivr.net/npm/keycloak-js@16.1.0/dist/keycloak.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-    <h1>Keycloak Authentication</h1>
-     
-    <button id="login">Login with Keycloak</button>
+<body class="bg-light">
+    <div class="container text-center mt-5">
+        <h1 class="display-4">Welcome to the Application</h1>
+        <p class="lead">Please log in to access the application</p>
+        <button id="loginButton" class="btn btn-primary">Log In</button>
+    </div>
 
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
     <script>
-        const keycloak = Keycloak({ 
-            url: 'http://localhost:8080', 
-            realm: 'saml', 
-            clientId: 'frontend', 
-            redirectUri: 'https://lujainsallam1.github.io/saml', 
+        // Initialize Keycloak
+        const keycloak = Keycloak({
+            url: 'http://localhost:8080/auth',
+            realm: 'master',
+            clientId: 'frontend',
         });
 
-        document.getElementById('login').addEventListener('click', () => {
-            keycloak.login(); // توجيه المستخدم إلى صفحة تسجيل الدخول
+        // Add event listener to the login button
+        document.getElementById('loginButton').addEventListener('click', () => {
+            keycloak.login();
         });
 
-        keycloak.init({ onLoad: 'login-required' }).success((authenticated) => { 
-            if (authenticated) { 
-                const accessToken = keycloak.token; // الحصول على access token
-                console.log(accessToken)
-                alert("Access Token: " + accessToken);
-            } else { 
-                alert("User authentication failed!"); 
-            } 
-        }).error(() => { 
-            alert("Could not authenticate the user!"); 
+        // Initialize Keycloak and handle user authentication
+        keycloak.init({ onLoad: 'login-required' }).then((authenticated) => {
+            if (authenticated) {
+                // User is successfully authenticated, you can add additional behavior here
+            } else {
+                alert("Authentication failed.");
+            }
         });
     </script>
 </body>
